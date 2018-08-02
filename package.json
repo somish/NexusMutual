@@ -1,7 +1,28 @@
 {
-  "devDependencies": {
-    "solhint": "^1.2.1"
+  "name": "NexusMutual",
+  "version": "1.0.0",
+  "description": "Smart Contracts Cover",
+  "main": "truffle.js",
+  "dependencies": {
+    "solc": "^0.4.24",
+    "truffle": "^4.1.13",
+    "truffle-fast-compile": "0.0.3",
+    "truffle-hdwallet-provider": "^0.0.5"
   },
-  "scripts": {},
-  "dependencies": {}
+  "devDependencies": {
+    "ganache-cli": "^6.1.6",
+    "mocha": "^5.2.0",
+    "solidity-coverage": "^0.5.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/somish/NexusMutual.git"
+  },
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/somish/NexusMutual/issues"
+  },
+  "homepage": "https://github.com/somish/NexusMutual#readme"
 }
+
