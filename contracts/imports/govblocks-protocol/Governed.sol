@@ -35,6 +35,7 @@ contract Governed {
 
     constructor() public {
         setGovernChecker();
+	setDappName("NEXUS_MUTUAL");
     }
 
     function setDappName(bytes32 _dAppName) internal {

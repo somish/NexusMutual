@@ -54,7 +54,7 @@ contract master is Governed {
     claims c1;
     claimsReward cr;
     pool p1;
-    MemberRoles mr;
+    MemberRole mr;
     nxmToken2 tc2;
 
     address public owner;
@@ -106,7 +106,7 @@ contract master is Governed {
     function changeMemberRolesAddress(address _memberRolesAddress) onlyInternal
     {
         memberRolesAddress = _memberRolesAddress;
-        mr = MemberRoles(memberRolesAddress);
+        mr = MemberRole(memberRolesAddress);
         tc2 = nxmToken2(versionContractAddress[currentVersion]["TOK2"]);
         tc2.changeMemberRolesAddress(_memberRolesAddress);
         

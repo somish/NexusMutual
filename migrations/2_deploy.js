@@ -41,7 +41,7 @@ module.exports = function(deployer) {
     deployer.deploy(claimsReward);
     deployer.deploy(master);
     deployer.deploy(master2);
-    deployer.deploy(pool);
+    //deployer.deploy(pool);
     deployer.deploy(pool2);
     deployer.deploy(pool3);
     deployer.deploy(poolData);
@@ -49,7 +49,7 @@ module.exports = function(deployer) {
     deployer.deploy(mcrData);
     deployer.deploy(nxmToken);
     deployer.deploy(nxmToken2);
-    deployer.deploy(nxmTokenData);
+    deployer.deploy(nxmTokenData,"0","NXM","18","NXM");
     deployer.deploy(quotation2);
     deployer.deploy(quotationData);
 };

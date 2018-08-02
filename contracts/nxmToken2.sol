@@ -26,7 +26,7 @@ import "./imports/govblocks-protocol/Governed.sol";
 import "./imports/openzeppelin-solidity/math/SafeMaths.sol";
 
 
-contract MemberRoles {
+contract MemberRole {
     
     function updateMemberRole(address _memberAddress, uint32 _roleId, bool _typeOf, uint _validity) public;
 
@@ -47,7 +47,7 @@ contract nxmToken2 is Iupgradable, Governed {
     nxmTokenData td;
     mcr m1;
     nxmToken tc1;
-    MemberRoles mr;
+    MemberRole mr;
     claimsReward cr;
 
     uint64 private constant DECIMAL1E18 = 1000000000000000000;
@@ -85,10 +85,6 @@ contract nxmToken2 is Iupgradable, Governed {
         
     }
     
-    function nxmToken2 () {
-        
-    }
-    
     function changeMasterAddress(address _add) {
         if (masterAddress == 0x000) {
             masterAddress = _add;
@@ -112,7 +108,7 @@ contract nxmToken2 is Iupgradable, Governed {
     }
 
     function changeMemberRolesAddress(address memberAddress) onlyInternal {
-        mr = MemberRoles(memberAddress);
+        mr = MemberRole(memberAddress);
     }
 
     /// @dev Gets the Token price in a given currency
