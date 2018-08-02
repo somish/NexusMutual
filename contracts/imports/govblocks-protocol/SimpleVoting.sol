@@ -237,24 +237,30 @@ contract SimpleVoting is Upgradeable {
     ) 
         external
     {
-        uint64[] memory solutionChosen = _solutionChosen;
+        //uint64[] memory solutionChosen = _solutionChosen;
         uint8 categoryThenMRSequence;
         uint8 intermediateVerdict;
         uint32 proposalId = _proposalId;
         uint currentVotingIdThenVoteValue;
-        uint voteStake = _voteStake;
         (categoryThenMRSequence, currentVotingIdThenVoteValue, intermediateVerdict) 
             = governanceDat.getProposalDetailsForSV(msg.sender, proposalId);
         categoryThenMRSequence = proposalCategory.getMRSequenceBySubCat(categoryThenMRSequence, currentVotingIdThenVoteValue);
         require(memberRole.checkRoleIdByAddress(msg.sender, categoryThenMRSequence));
         if (currentVotingIdThenVoteValue == 0)
-            require(solutionChosen[0] <= governanceDat.getTotalSolutions(proposalId));
+            require(_solutionChosen[0] <= governanceDat.getTotalSolutions(proposalId));
         else
-            require(solutionChosen[0] == intermediateVerdict || solutionChosen[0] == 0);
-        if (voteStake != 0)
-            receiveStake("V", proposalId, voteStake, _validityUpto, _v, _r, _s, _lockTokenTxHash);
-        currentVotingIdThenVoteValue = getVoteValueGivenByMember(msg.sender, voteStake);
-        governanceDat.addVote(msg.sender, solutionChosen, voteStake, currentVotingIdThenVoteValue, proposalId, categoryThenMRSequence);
+            require(_solutionChosen[0] == intermediateVerdict || _solutionChosen[0] == 0);
+        if (_voteStake != 0)
+            receiveStake("V", proposalId, _voteStake, _validityUpto, _v, _r, _s, _lockTokenTxHash);
+        currentVotingIdThenVoteValue = getVoteValueGivenByMember(msg.sender, _voteStake);
+        governanceDat.addVote(
+            msg.sender, 
+            _solutionChosen, 
+            _voteStake, 
+            currentVotingIdThenVoteValue, 
+            proposalId, 
+            categoryThenMRSequence
+        );
         if(governanceDat.getAllVoteIdsLengthByProposalRole(proposalId, categoryThenMRSequence) 
             == memberRole.getAllMemberLength(categoryThenMRSequence) 
             && categoryThenMRSequence != 2

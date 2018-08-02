@@ -523,11 +523,10 @@ contract GovernanceData is Upgradeable {
         external 
         onlyInternal
     {
-        uint totalVotes = allVotes.length;
-        proposalRoleVote[_proposalId][_roleId].push(totalVotes);
-        allVotesByMember[_memberAddress].push(totalVotes);
-        addressProposalVote[_memberAddress][_proposalId] = totalVotes;
-        emit Vote(_memberAddress, _proposalId, now, _voteStake, totalVotes);
+        proposalRoleVote[_proposalId][_roleId].push(allVotes.length);
+        allVotesByMember[_memberAddress].push(allVotes.length);
+        addressProposalVote[_memberAddress][_proposalId] = allVotes.length;
+        emit Vote(_memberAddress, _proposalId, now, _voteStake, allVotes.length);
         allVotes.push(ProposalVote(_memberAddress, _solutionChosen, uint208(_voteValue), _proposalId));
         allProposalData[_proposalId].totalVoteValue = allProposalData[_proposalId].totalVoteValue 
             + _voteValue;

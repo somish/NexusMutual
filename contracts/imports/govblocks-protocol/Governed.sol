@@ -35,7 +35,6 @@ contract Governed {
 
     constructor() public {
         setGovernChecker();
-        setDappName("0x4e455855532d4d555455414c");
     }
 
     function setDappName(bytes32 _dAppName) internal {
