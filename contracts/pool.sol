@@ -53,7 +53,7 @@ contract pool is usingOraclize, Iupgradable, Governed {
 
     event Apiresult(address indexed sender, string msg, bytes32 myid);
 
-    function pool () Governed("NEXUS-MUTUAL") {
+    function pool () {
 
     }
     
