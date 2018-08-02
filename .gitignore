@@ -3,3 +3,6 @@ build
 
 # txt files
 .txt
+
+# node modules
+node_modules

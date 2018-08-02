@@ -4,10 +4,11 @@
   "description": "Smart Contracts Cover",
   "main": "truffle.js",
   "dependencies": {
+    "ethereumjs-wallet": "^0.6.1",
     "solc": "^0.4.24",
     "truffle": "^4.1.13",
     "truffle-fast-compile": "0.0.3",
-    "truffle-hdwallet-provider": "^0.0.5"
+    "truffle-hdwallet-provider": "0.0.6"
   },
   "devDependencies": {
     "ganache-cli": "^6.1.6",
@@ -25,4 +26,3 @@
   },
   "homepage": "https://github.com/somish/NexusMutual#readme"
 }
-

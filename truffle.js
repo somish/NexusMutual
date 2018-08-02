@@ -1,9 +1,9 @@
-//var HDWalletProvider = require("truffle-hdwallet-provider");
+var HDWalletProvider = require("truffle-hdwallet-provider");
 
-//var mnemonic = "word vocal hazard glory home property canvas duty fetch private wasp ozone";
+var mnemonic = "word vocal hazard glory home property canvas duty fetch private wasp ozone";
 
 module.exports = {
-  /*networks: {
+  networks: {
     development: {
       host: "localhost",
       port: 7070,
@@ -30,7 +30,7 @@ module.exports = {
       },      
       network_id: 42
     }
-  },*/
+  },
   solc: {
     optimizer: {
       enabled: true,
