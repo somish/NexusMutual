@@ -41,7 +41,7 @@ module.exports = function(deployer) {
     deployer.deploy(claimsReward);
     deployer.deploy(master);
     deployer.deploy(master2);
-    //deployer.deploy(pool);
+    deployer.deploy(pool);
     deployer.deploy(pool2);
     deployer.deploy(pool3);
     deployer.deploy(poolData);
