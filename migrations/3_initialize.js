@@ -42,7 +42,7 @@ module.exports = deployer => {
     let nms2;
     let nxm;
     let nxm2;
-    let nxmData;
+    let td;
     let pl1;
     let pl2;
     let pl3;
@@ -133,7 +133,7 @@ module.exports = deployer => {
         return master.deployed();
     })
     .then(function(instance){
-        nms = instance;
+        nms = instance;  
         return master2.deployed();
     })
     .then(function(instance){
@@ -145,7 +145,7 @@ module.exports = deployer => {
         return nxmTokenData.deployed();
     })
     .then(function(instance){
-        nxmData = instance;
+        td = instance;
         return mcr.deployed();
     })
     .then(function(instance){
@@ -157,7 +157,7 @@ module.exports = deployer => {
         return pool.deployed();
     })
     .then(function(instance){
-        pl = instance;
+        pl1 = instance;
         return pool2.deployed();
     })
     .then(function(instance){
@@ -182,7 +182,21 @@ module.exports = deployer => {
     })
     .then(function(instance){
         cd = instance;
-        console.log("address initialized");
+	return quotation2.deployed();
+    })
+    .then(function(instance){
+        q2 = instance;
+        return quotationData.deployed();
+    })
+    .then(function(instance){
+	qd = instance;
+	var addr = [qd.address, td.address, cd.address, pd.address, mcd.address, q2.address, nxm.address, nxm2.address, cl.address, cr.address, pl1.address, pl2.address, nms2.address, mc.address, pl3.address];
+	console.log("address initialized");
+	return nms.addNewVersion(addr);
+    })
+    .then(function(){
+	console.log("Add new version");
+        return nms.switchToRecentVersion();
     })
     .then(function(){
         console.log("Nexus-Mutual initialized !");
