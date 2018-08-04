@@ -78,8 +78,8 @@ contract master is Governed {
     /// @dev Constructor
     function master() {
         owner = msg.sender;
-        contractsActive[address(this)] = true; //1
         masterAddress = address(this);
+        contractsActive[masterAddress] = true; //1
         versionLength = 0;
         pauseTime = SafeMaths.mul(28, 1 days); //4 weeks
         contractNames.push("QD");
@@ -103,13 +103,11 @@ contract master is Governed {
     /// @dev Changes the member roles contract address. The contract has been reused from GovBlocks
     /// and can be found in the imports folder
     /// The access modifier needs to be changed in onlyAuthorizedToGovern in future
-    function changeMemberRolesAddress(address _memberRolesAddress) onlyInternal
-    {
+    function changeMemberRolesAddress(address _memberRolesAddress) onlyInternal {
         memberRolesAddress = _memberRolesAddress;
         mr = MemberRole(memberRolesAddress);
         tc2 = nxmToken2(versionContractAddress[currentVersion]["TOK2"]);
         tc2.changeMemberRolesAddress(_memberRolesAddress);
-        
     }
     
     /// @dev Add Emergency pause
@@ -156,12 +154,12 @@ contract master is Governed {
             cr.upgrade(versionContractAddress[currentVersion]["CR"]);
         }
         addRemoveAddress(version);
+        changeMasterAddress(address(this));
         changeOtherAddress();
         if (currentVersion > 0) {
             p1 = pool(versionContractAddress[currentVersion]["P1"]);
             p1.versionOraclise(version);
         }
-        
             
     }
         
@@ -288,3 +286,4 @@ contract master is Governed {
     }
 
 }
+
