@@ -158,6 +158,9 @@ module.exports = deployer => {
     })
     .then(function(instance){
         pl1 = instance;
+        return pl1.takeEthersOnly({from: web3.eth.accounts[0], value: web3.toWei(2)});
+    })
+    .then(function(){
         return pool2.deployed();
     })
     .then(function(instance){
@@ -199,7 +202,52 @@ module.exports = deployer => {
         return nms.switchToRecentVersion();
     })
     .then(function(){
-        console.log("Nexus-Mutual initialized !");
+        return td.setWalletAddress("0x7266c50f1f461d2748e675b907ef22987f6b5358");
+    })
+    .then(function(){
+        return qd.changeAuthQuoteEngine("0xb24919181daead6635e613576ca11c5aa5a4e133");
+    })
+    .then(function(){
+        return nms2.addCoverStatus();
+    })
+    .then(function(){
+        return nms2.callPoolDataMethods();
+    })
+    .then(function(){
+        return nms2.addStatusInClaims();
+    })
+    .then(function(){
+        return nms2.addMCRCurr();
+    })
+    .then(function(){
+        return nms2.addStatusInClaims();
+    })
+    .then(function(){
+        return pd.changeWETHAddress("0xd0a1e359811322d97991e03f863a0c30c2cf029c");
+    })
+    .then(function(){
+        return pd.change0xMakerAddress("0x7266C50F1f461d2748e675B907eF22987F6B5358");
+    })
+    .then(function(){
+        var args = [["0x444744","0x49434e","0x5a5258","0x4d4b52","0x474e54","0x4d4c4e"],[100,200,300,400,500,600],20180804];
+        return pl3.saveIADetails(args);
+    })
+    .then(function(){
+        return pl2.changeExchangeContractAddress("0x90fe2af704b34e0224bf2299c838e04d4dcf1364");
+    })
+    .then(function(){
+        return pl3.changeExchangeContractAddress("0x90fe2af704b34e0224bf2299c838e04d4dcf1364");
+    })
+    .then(function(){
+        return mc.changeNotariseAdd("0x7266c50f1f461d2748e675b907ef22987f6b5358");
+    })
+    .then(function(){
+        var args = [18000,10000,2,["0x455448","0x444149"],[100,65407],20180804]
+        return mc.addMCRData(args);
+    })
+    .then(function(){
+        console.log("NXM initialized");
     });
 };
+
 
