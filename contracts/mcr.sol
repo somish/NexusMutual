@@ -122,7 +122,7 @@ contract mcr is Iupgradable {
     }
 
     /// @dev Changes address which can notise MCR
-    function changenotariseAddress(address add) onlyOwner {
+    function changeNotariseAddress(address add) onlyOwner {
         md.changeNotariseAdd(add);
     }
 

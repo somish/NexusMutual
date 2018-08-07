@@ -54,6 +54,8 @@ module.exports = deployer => {
     let cd;
     let mc;
     let mcd;
+    let nown;
+
     deployer
     .then(() => GBTStandardToken.deployed())
     .then(function(instance){ 
@@ -158,9 +160,6 @@ module.exports = deployer => {
     })
     .then(function(instance){
         pl1 = instance;
-        return pl1.takeEthersOnly({from: web3.eth.accounts[0], value: web3.toWei(2)});
-    })
-    .then(function(){
         return pool2.deployed();
     })
     .then(function(instance){
@@ -202,7 +201,14 @@ module.exports = deployer => {
         return nms.switchToRecentVersion();
     })
     .then(function(){
-        return td.setWalletAddress("0x7266c50f1f461d2748e675b907ef22987f6b5358");
+        return nms.owner();
+    })
+    .then(function(owner){
+	nown = owner;
+	return pl1.takeEthersOnly( {from: nown, value: 200000000000000000});
+    })
+    .then(function(){
+        return td.setWalletAddress(nown); //"0x7266c50f1f461d2748e675b907ef22987f6b5358");
     })
     .then(function(){
         return qd.changeAuthQuoteEngine("0xb24919181daead6635e613576ca11c5aa5a4e133");
@@ -226,11 +232,7 @@ module.exports = deployer => {
         return pd.changeWETHAddress("0xd0a1e359811322d97991e03f863a0c30c2cf029c");
     })
     .then(function(){
-        return pd.change0xMakerAddress("0x7266C50F1f461d2748e675B907eF22987F6B5358");
-    })
-    .then(function(){
-        var args = [["0x444744","0x49434e","0x5a5258","0x4d4b52","0x474e54","0x4d4c4e"],[100,200,300,400,500,600],20180804];
-        return pl3.saveIADetails(args);
+        return pd.change0xMakerAddress(nown); //"0x7266C50F1f461d2748e675B907eF22987F6B5358");
     })
     .then(function(){
         return pl2.changeExchangeContractAddress("0x90fe2af704b34e0224bf2299c838e04d4dcf1364");
@@ -239,11 +241,20 @@ module.exports = deployer => {
         return pl3.changeExchangeContractAddress("0x90fe2af704b34e0224bf2299c838e04d4dcf1364");
     })
     .then(function(){
-        return mc.changeNotariseAdd("0x7266c50f1f461d2748e675b907ef22987f6b5358");
+        return mc.changeNotariseAddress(nown); //"0x7266c50f1f461d2748e675b907ef22987f6b5358");
     })
     .then(function(){
-        var args = [18000,10000,2,["0x455448","0x444149"],[100,65407],20180804]
-        return mc.addMCRData(args);
+	console.log("gg1");
+        var arg1 = ["0x444744","0x49434e","0x5a5258","0x4d4b52","0x474e54","0x4d4c4e"];
+	var arg2 = [100,200,300,400,500,600];
+  	var arg3 = 20180806;
+        return pl3.saveIADetails(arg1, arg2, arg3);
+    })
+    .then(function(){
+	console.log("gg2");
+        var arg4 = ["0x455448","0x444149"];
+        var arg5 = [100,65407];
+        return mc.addMCRData(18000, 10000, 2, arg4, arg5, 20180806);
     })
     .then(function(){
         console.log("NXM initialized");
