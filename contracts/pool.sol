@@ -13,7 +13,7 @@
   You should have received a copy of the GNU General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/ */
 
-pragma solidity ^0.4.11;
+pragma solidity 0.4.24;
 
 import "./nxmToken.sol";
 import "./poolData.sol";
@@ -26,7 +26,7 @@ import "./Iupgradable.sol";
 import "./imports/openzeppelin-solidity/math/SafeMaths.sol";
 import "./imports/openzeppelin-solidity/token/ERC20/StandardToken.sol";
 import "./imports/openzeppelin-solidity/token/ERC20/BasicToken.sol";
-import "./imports/oraclize/ethereum-api/oraclizeAPI_0.4.sol";
+import "./imports/oraclize/ethereum-api/usingOraclize.sol";
 import "./imports/govblocks-protocol/Governed.sol";
 
 
@@ -52,9 +52,14 @@ contract pool is usingOraclize, Iupgradable, Governed {
     BasicToken btok;
 
     event Apiresult(address indexed sender, string msg, bytes32 myid);
+    event OraclizeResult(bytes8 res);
+
+    function pool() {
+        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+    }
 
     function () public payable {}
-  
+
     function changeMasterAddress(address _add) {
         if (masterAddress == 0x000) {
             masterAddress = _add;
@@ -126,6 +131,7 @@ contract pool is usingOraclize, Iupgradable, Governed {
     /// @dev Calls the Oraclize Query to initiate MCR calculation.
     /// @param time Time (in milliseconds) after which the next MCR calculation should be initiated
     function mcrOraclise(uint64 time) onlyInternal {
+        //emit oraclizeResult("0x6d6b62");
         bytes32 myid = oraclize_query(time, "URL", "http://a3.nexusmutual.io");
         saveApiDetails(myid, "MCR", 0);
     }
@@ -159,6 +165,7 @@ contract pool is usingOraclize, Iupgradable, Governed {
     /// @dev Calls the Oraclize Query in case MCR calculation fails.
     /// @param time Time (in seconds) after which the next MCR calculation should be initiated
     function mcrOracliseFail(uint id, uint64 time) onlyInternal {
+        //emit oraclizeResult("0x6d6b62");
         bytes32 myid = oraclize_query(time, "URL", "", 1000000);
         saveApiDetails(myid, "MCRF", id);
     }
@@ -183,8 +190,8 @@ contract pool is usingOraclize, Iupgradable, Governed {
 
     /// @dev Handles callback of external oracle query. 
     function __callback(bytes32 myid, string result) {
-
         require(msg.sender == oraclize_cbAddress() || ms.isOwner(msg.sender) == true);
+        emit oraclizeResult("0x6d6b62");
         p2.delegateCallBack(myid);
     }
 

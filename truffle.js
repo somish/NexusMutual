@@ -1,14 +1,14 @@
-var HDWalletProvider = require("truffle-hdwallet-provider");
+//var HDWalletProvider = require("truffle-hdwallet-provider");
 
-var mnemonic = "word vocal hazard glory home property canvas duty fetch private wasp ozone";
+//var mnemonic = "word vocal hazard glory home property canvas duty fetch private wasp ozone";
 
 module.exports = {
   networks: {
     development: {
-      host: "localhost",
-      port: 7070,
+      host: "176.9.155.139",
+      port: 8069,
       network_id: "5777"
-    },
+    }/*,
     ropsten: {
       gasPrice : 1,
       provider: function() {
@@ -29,7 +29,7 @@ module.exports = {
         return new HDWalletProvider(mnemonic, "https://kovan.infura.io/");
       },      
       network_id: 42
-    }
+    } */
   },
   solc: {
     optimizer: {

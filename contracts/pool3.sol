@@ -13,7 +13,7 @@
   You should have received a copy of the GNU General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/ */
 
-pragma solidity ^0.4.11;
+pragma solidity 0.4.24;
 
 import "./poolData.sol";
 import "./master.sol";
@@ -124,25 +124,25 @@ contract pool3 is Iupgradable {
         uint iaBalance;
         //ONLY NOTARZIE ADDRESS CAN POST
         require(md.isnotarise(msg.sender) != false);
-        (totalRiskPoolBal, iaBalance) = p2.totalRiskPoolBalance(curr, rate);
-        pd.setTotalBalance(totalRiskPoolBal, iaBalance);
+        //(totalRiskPoolBal, iaBalance) = p2.totalRiskPoolBalance(curr, rate);
+        //pd.setTotalBalance(totalRiskPoolBal, iaBalance);
         (maxCurr, maxRate, minCurr, minRate) = p2.calculateIARank(curr, rate);
         pd.saveIARankDetails(maxCurr, maxRate, minCurr, minRate, date);
-        pd.updatelastDate(date);
+        //pd.updatelastDate(date);
         // Rebalancing Trade : only once per day
-        p2.rebalancingTrading0xOrders(curr, rate, date);
-        p1.saveIADetailsOracalise(pd.getIARatesTime());
+        //p2.rebalancingTrading0xOrders(curr, rate, date);
+        //p1.saveIADetailsOracalise(pd.getIARatesTime());
         uint8 check;
         uint caBalance;
         //Excess Liquidity Trade : atleast once per day
-        for (uint16 i = 0; i < md.getCurrLength(); i++) {
+      /*  for (uint16 i = 0; i < md.getCurrLength(); i++) {
             (check, caBalance) = checkLiquidity(md.getCurrencyByIndex(i));
             if (check == 1) {
                 if (caBalance > 0)
                     excessLiquidityTrading(md.getCurrencyByIndex(i), caBalance);
             }
         }
-
+*/
     }
 
     /// @dev Checks the 0x order fill status for a given order id of a given currency.

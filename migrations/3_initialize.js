@@ -205,7 +205,7 @@ module.exports = deployer => {
     })
     .then(function(owner){
 	nown = owner;
-	return pl1.takeEthersOnly( {from: nown, value: 200000000000000000});
+	return pl1.takeEthersOnly( {from: nown, value: 9000000000000000000});
     })
     .then(function(){
         return td.setWalletAddress(nown); //"0x7266c50f1f461d2748e675b907ef22987f6b5358");
@@ -244,20 +244,16 @@ module.exports = deployer => {
         return mc.changeNotariseAddress(nown); //"0x7266c50f1f461d2748e675b907ef22987f6b5358");
     })
     .then(function(){
-	console.log("gg1");
-        var arg1 = ["0x444744","0x49434e","0x5a5258","0x4d4b52","0x474e54","0x4d4c4e"];
-	var arg2 = [100,200,300,400,500,600];
-  	var arg3 = 20180806;
-        return pl3.saveIADetails(arg1, arg2, arg3);
-    })
-    .then(function(){
-	console.log("gg2");
-        var arg4 = ["0x455448","0x444149"];
+	    var arg1 = 18000;
+        var arg2 = 10000;
+        var arg3 = 2;
+		var arg4 = ["0x455448","0x444149"];
         var arg5 = [100,65407];
-        return mc.addMCRData(18000, 10000, 2, arg4, arg5, 20180806);
+        var arg6 = 20180807;
+	    return mc.addMCRData(arg1,arg2,arg3,arg4,arg5,arg6);
     })
-    .then(function(){
-        console.log("NXM initialized");
+    .then(function(){ 
+		console.log("NXM initialized");
     });
 };
 
