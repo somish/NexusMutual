@@ -237,7 +237,6 @@ contract master is Governed {
         for (uint i = 0; i < contractNames.length; i++) {
             versionContractAddress[versionNo][contractNames[i]] = arr[i];
         }
-        
     }
     
     /// @dev Allow AB Members to Start Emergency Pause
