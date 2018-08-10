@@ -41,7 +41,7 @@ contract('master', function(_, owner) {
   it('should add a new version', async function () {
     const addr = [this.quotationData.address, this.nxmTokenData.address, this.claimsData.address, this.poolData.address, this.mcrData.address, this.quotation2.address, this.nxmToken.address, this.nxmToken2.address, this.claims.address, this.claimsReward.address, this.pool.address, this.pool2.address, this.master2.address, this.mcr.address, this.pool3.address];
     await this.master.addNewVersion(addr, { from: owner })
-    const versionLength = await this.master.versionLength();
+    const versionLength = await master.versionLength();
     assert.equal(versionLength, 0);
   });
 
