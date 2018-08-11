@@ -296,6 +296,7 @@ contract GovernanceData is Upgradeable {
     uint public membershipScalingFactor;
     uint public scalingWeight;
     bool public constructorCheck;
+    bool public punishVoters;
     uint public depositPercProposal;
     uint public depositPercSolution;
     uint public depositPercVote;
@@ -691,6 +692,10 @@ contract GovernanceData is Upgradeable {
     /// @dev Changes quoram percentage. Value required to pass proposal.
     function changeQuorumPercentage(uint _quorumPercentage) public onlyMaster {
         quorumPercentage = _quorumPercentage;
+    }
+
+    function setPunishVoters(bool _punish) public onlyInternal {
+        punishVoters = _punish;
     }
 
     /// @dev Gets reputation points to proceed with updating the member reputation level

@@ -98,7 +98,7 @@ contract Pool is Upgradeable {
         address newPool = master.getLatestAddress("PL");
         if(address(this) != newPool) {
            gbt.transfer(master.getLatestAddress("PL"), gbt.balanceOf(address(this)) - gbt.getLockToken(address(this)));
-           bool sent = newPool.send(address(this).balance);
+           newPool.send(address(this).balance);
         }
     }
 
@@ -236,6 +236,10 @@ contract Pool is Upgradeable {
                     pendingVoteReward 
                     + calcReward 
                     + governanceDat.getDepositedTokens(_memberAddress, proposalId, "V");
+            } else if (!governanceDat.punishVoters() && finalVredict > 0 && returnedTokensFlag == 0 && totalReward != 0) {
+                calcReward = (proposalCategory.getRewardPercVote(category) * voteValue * totalReward) 
+                    / (100 * governanceDat.getProposalTotalVoteValue(proposalId));
+                pendingVoteReward = pendingVoteReward + calcReward;
             }
         }
     }

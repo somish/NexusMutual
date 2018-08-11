@@ -544,13 +544,13 @@ contract Governance is Upgradeable {
             governanceDat.callRewardEvent(
                 _memberAddress, 
                 i, 
-                "GBT Reward for Proposal owner", 
+                "GBT Reward-Proposal owner", 
                 calcReward
             );
         }
         
         governanceDat.setMemberReputation(
-            "Reputation credit for proposal owner", 
+            "Reputation credit-proposal owner", 
             i, 
             _memberAddress, 
             SafeMath.add32(governanceDat.getMemberReputation(_memberAddress), addProposalOwnerPoints), 
@@ -634,13 +634,13 @@ contract Governance is Upgradeable {
                 governanceDat.callRewardEvent(
                     _memberAddress, 
                     i, 
-                    "GBT Reward earned for being Solution owner", 
+                    "GBT Reward-Solution owner", 
                     calcReward
                 );
             }
             
             governanceDat.setMemberReputation(
-                "Reputation credit for solution owner", 
+                "Reputation credit-solution owner", 
                 i, 
                 _memberAddress, 
                 SafeMath.add32(governanceDat.getMemberReputation(_memberAddress), addSolutionOwnerPoints), 
@@ -710,11 +710,23 @@ contract Governance is Upgradeable {
                 governanceDat.callRewardEvent(
                     _memberAddress, 
                     _proposalId, 
-                    "GBT Reward earned for voting in favour of final Solution", 
+                    "GBT Reward-vote accepted", 
                     calcReward
                 );
             }
             governanceDat.setReturnedTokensFlag(_memberAddress, _proposalId, "V", 1);
+        } else if (!governanceDat.punishVoters() && finalVredict > 0 && returnedTokensFlag == 0 && totalReward != 0) {
+            calcReward = (proposalCategory.getRewardPercVote(category) * voteValue * totalReward) 
+                / (100 * governanceDat.getProposalTotalVoteValue(_proposalId));
+            tempfinalRewardToDistribute = tempfinalRewardToDistribute + calcReward;
+            if (calcReward > 0) {
+                governanceDat.callRewardEvent(
+                    _memberAddress, 
+                    _proposalId, 
+                    "GBT Reward-voting", 
+                    calcReward
+                );
+            }
         }
     }
 
