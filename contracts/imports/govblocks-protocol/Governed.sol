@@ -26,21 +26,20 @@ contract Governed {
 
     GovernChecker internal governChecker;
 
-    bytes32 internal dAppName;
+    bytes32 internal dabName;
 
     modifier onlyAuthorizedToGovern() {
-        require(governChecker.authorized(dAppName) == msg.sender);
+	if(address(governChecker) != address(0))
+            require(governChecker.authorized(dabName) == msg.sender);
         _;
     }
 
     constructor() public {
         setGovernChecker();
-        setDappName("NEXUS-MUTUAL");
     }
 
-    function 
-    setDappName(bytes32 _dAppName) internal {
-        dAppName = _dAppName;
+    function setDappName(bytes32 _dAppName) internal {
+        dabName = _dAppName;
     } 
 
     function setGovernChecker() public {
