@@ -53,24 +53,11 @@ contract Pool1 is usingOraclize, Iupgradable, Governed {
 
     event Apiresult(address indexed sender, string msg, bytes32 myid);
 
-    function Pool1() {
-        OAR = OraclizeAddrResolverI(0x6f485C8BF6fc43eA212E93BBF8ce046C7f1cb475);
+    constructor () public {
+        dAppName = "NEXUS-MUTUAL";
     }
 
     function () public payable {}
-
-    function changeMasterAddress(address _add) {
-        if (masterAddress == 0x000) {
-            masterAddress = _add;
-            ms = NXMaster(masterAddress);
-        } else {
-            ms = NXMaster(masterAddress);
-            require(ms.isInternal(msg.sender) == true);
-            masterAddress = _add;
-
-        }
-
-    }
 
     modifier onlyInternal {
 
@@ -88,6 +75,19 @@ contract Pool1 is usingOraclize, Iupgradable, Governed {
 
         require(ms.isPause() == false && ms.isMember(msg.sender) == true);
         _;
+    }
+
+    function changeMasterAddress(address _add) {
+        if (masterAddress == 0x000) {
+            masterAddress = _add;
+            ms = NXMaster(masterAddress);
+        } else {
+            ms = NXMaster(masterAddress);
+            require(ms.isInternal(msg.sender) == true);
+            masterAddress = _add;
+
+        }
+
     }
 
     function changeDependentContractAddress() onlyInternal {

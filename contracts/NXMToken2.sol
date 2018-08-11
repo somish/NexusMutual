@@ -85,6 +85,10 @@ contract NXMToken2 is Iupgradable, Governed {
 
     }
 
+    constructor () public {
+        dAppName = "NEXUS-MUTUAL";
+    }
+    
     function changeMasterAddress(address _add) {
         if (masterAddress == 0x000) {
             masterAddress = _add;
