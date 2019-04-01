@@ -11,18 +11,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/ */
 
 pragma solidity 0.4.24;
-import "./imports/openzeppelin-solidity/math/SafeMath.sol";
-import "./imports/openzeppelin-solidity/token/ERC20/ERC20.sol";
+import "./TokenFunctions.sol";
 import "./imports/govblocks-protocol/interfaces/IMemberRoles.sol";
 import "./imports/govblocks-protocol/Governed.sol";
 import "./TokenController.sol";
-import "./Iupgradable.sol";
 import "./ClaimsReward.sol";
 import "./TokenData.sol";
-import "./QuotationData.sol";
 import "./Governance.sol";
-import "./TokenFunctions.sol";
-import "./NXMToken.sol";
+import "./QuotationData.sol";
 
 
 contract MemberRoles is IMemberRoles, Governed, Iupgradable {
@@ -100,6 +96,7 @@ contract MemberRoles is IMemberRoles, Governed, Iupgradable {
         //AB count can't exceed maxABCount
         for (uint i = 0; i < abArray.length; i++) {
             dAppToken.addToWhitelist(abArray[i]);
+            _updateRole(abArray[i], uint(Role.Member), true);
             _updateRole(abArray[i], uint(Role.AdvisoryBoard), true);   
         }
     }
@@ -133,7 +130,7 @@ contract MemberRoles is IMemberRoles, Governed, Iupgradable {
         if (masterAddress != address(0))
             require(masterAddress == msg.sender || ms.isInternal(msg.sender));
         masterAddress = _masterAddress;
-        ms = NXMaster(_masterAddress);
+        ms = INXMMaster(_masterAddress);
         nxMasterAddress = _masterAddress;
         
     }
@@ -274,7 +271,7 @@ contract MemberRoles is IMemberRoles, Governed, Iupgradable {
     function members(uint _memberRoleId) public view returns(uint, address[] memberArray) { //solhint-disable-line
         uint length = memberRoleData[_memberRoleId].memberAddress.length;
         uint i;
-        uint j;
+        uint j = 0;
         memberArray = new address[](memberRoleData[_memberRoleId].memberCounter);
         for (i = 0; i < length; i++) {
             address member = memberRoleData[_memberRoleId].memberAddress[i];
@@ -419,6 +416,8 @@ contract MemberRoles is IMemberRoles, Governed, Iupgradable {
         );
         _updateRole(_firstAB, uint(Role.AdvisoryBoard), true);
         _updateRole(_firstAB, uint(Role.Owner), true);
+        // dAppToken.addToWhitelist(_firstAB);
+        _updateRole(_firstAB, uint(Role.Member), true);
         launchedOn = 0;
     }
 

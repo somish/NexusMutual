@@ -15,21 +15,10 @@
 
 pragma solidity 0.4.24;
 
-import "./TokenFunctions.sol";
-import "./Claims.sol";
-import "./ClaimsReward.sol";
-import "./Pool1.sol";
+
 import "./Pool2.sol";
-import "./Iupgradable.sol";
-import "./imports/openzeppelin-solidity/math/SafeMath.sol";
 import "./imports/govblocks-protocol/Governed.sol";
-import "./MemberRoles.sol";
-import "./TokenData.sol";
-import "./PoolData.sol";
-import "./QuotationData.sol";
-import "./Quotation.sol";
-import "./TokenController.sol";
-import "./MCR.sol";
+import "./Claims.sol";
 import "./imports/proxy/OwnedUpgradeabilityProxy.sol";
 
 
@@ -337,11 +326,9 @@ contract NXMaster is Governed {
             require(checkIsAuthToGoverned(msg.sender), "Neither master nor Authorised");
         }
         for (uint i = 0; i < allContractNames.length; i++) {
-            if ((versionDates.length == 2) || !(allContractNames[i] == "MR" || 
-                allContractNames[i] == "GV" || allContractNames[i] == "PC" || allContractNames[i] == "TC")) {
-                up = Iupgradable(allContractVersions[versionDates.length - 1][allContractNames[i]]);
-                up.changeMasterAddress(_masterAddress);
-            }
+            
+            up = Iupgradable(allContractVersions[versionDates.length - 1][allContractNames[i]]);
+            up.changeMasterAddress(_masterAddress);
             if (allContractNames[i] == "MR" || 
                     allContractNames[i] == "GV" || allContractNames[i] == "PC" || allContractNames[i] == "TC")
                 _changeProxyOwnership(_masterAddress, 
@@ -449,6 +436,7 @@ contract NXMaster is Governed {
             _changeAllAddress();
             TokenController tc = TokenController(getLatestAddress("TC"));
             tc.changeOperator(getLatestAddress("TC"));
+            tc.addToWhitelist(owner);
         }
         
         
