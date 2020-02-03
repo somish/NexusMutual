@@ -29,8 +29,10 @@ let proposalId;
 let pId;
 let nxmToken;
 let balance;
+let IAstatus;
 let status;
 let voters;
+let accounts = [];
 let maxAllowance =
   '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
@@ -60,6 +62,26 @@ contract(
     notMember
   ]) => {
     before(async function() {
+      accounts = [
+        ab1,
+        ab2,
+        ab3,
+        ab4,
+        ab5,
+        mem1,
+        mem2,
+        mem3,
+        mem4,
+        mem5,
+        mem6,
+        mem7,
+        mem8,
+        mem9,
+        mem10,
+        mem11,
+        mem12,
+        notMember
+      ];
       nxms = await NXMaster.deployed();
       tf = await TokenFunctions.deployed();
       cr = await ClaimsReward.deployed();
@@ -74,33 +96,33 @@ contract(
       // tc = await TokenController.deployed();
       pd = await PoolData.deployed();
       await mr.payJoiningFee(ab2, {
-            value: 2000000000000000,
-            from: ab2
-          });
-          await mr.kycVerdict(ab2, true, {
-            from: web3.eth.accounts[0]
-          });
-       await mr.payJoiningFee(ab3, {
-            value: 2000000000000000,
-            from: ab3
-          });
-          await mr.kycVerdict(ab3, true, {
-            from: web3.eth.accounts[0]
-          });
-        await mr.payJoiningFee(ab4, {
-            value: 2000000000000000,
-            from: ab4
-          });
-          await mr.kycVerdict(ab4, true, {
-            from: web3.eth.accounts[0]
-          });
-          await mr.payJoiningFee(ab5, {
-            value: 2000000000000000,
-            from: ab5
-          });
-          await mr.kycVerdict(ab5, true, {
-            from: web3.eth.accounts[0]
-          });
+        value: 2000000000000000,
+        from: ab2
+      });
+      await mr.kycVerdict(ab2, true, {
+        from: accounts[0]
+      });
+      await mr.payJoiningFee(ab3, {
+        value: 2000000000000000,
+        from: ab3
+      });
+      await mr.kycVerdict(ab3, true, {
+        from: accounts[0]
+      });
+      await mr.payJoiningFee(ab4, {
+        value: 2000000000000000,
+        from: ab4
+      });
+      await mr.kycVerdict(ab4, true, {
+        from: accounts[0]
+      });
+      await mr.payJoiningFee(ab5, {
+        value: 2000000000000000,
+        from: ab5
+      });
+      await mr.kycVerdict(ab5, true, {
+        from: accounts[0]
+      });
       await mr.addInitialABMembers([ab2, ab3, ab4, ab5]);
       await nxmToken.approve(tc.address, maxAllowance);
       let bal = await nxmToken.balanceOf(ab1);
@@ -127,29 +149,29 @@ contract(
         238500
       ];
       await nxmToken.approve(cr.address, maxAllowance, {
-        from: web3.eth.accounts[0]
+        from: accounts[0]
       });
-      // await mr.payJoiningFee(web3.eth.accounts[0], {
+      // await mr.payJoiningFee(accounts[0], {
       //   value: 2000000000000000,
-      //   from: web3.eth.accounts[0]
+      //   from: accounts[0]
       // });
-      // await mr.kycVerdict(web3.eth.accounts[0], true, {
-      //   from: web3.eth.accounts[0]
+      // await mr.kycVerdict(accounts[0], true, {
+      //   from: accounts[0]
       // });
       for (let i = 1; i < 18; i++) {
         await nxmToken.approve(cr.address, maxAllowance, {
-          from: web3.eth.accounts[i]
+          from: accounts[i]
         });
         if (i > 4) {
-          await mr.payJoiningFee(web3.eth.accounts[i], {
+          await mr.payJoiningFee(accounts[i], {
             value: 2000000000000000,
-            from: web3.eth.accounts[i]
+            from: accounts[i]
           });
-          await mr.kycVerdict(web3.eth.accounts[i], true, {
-            from: web3.eth.accounts[0]
+          await mr.kycVerdict(accounts[i], true, {
+            from: accounts[0]
           });
         }
-        await nxmToken.transfer(web3.eth.accounts[i], toWei(balances[i]));
+        await nxmToken.transfer(accounts[i], toWei(balances[i]));
       }
       // await gv.delegateVote(ab1, { from: ab2 });
       await gv.setDelegationStatus(true, { from: ab1 });
@@ -234,18 +256,16 @@ contract(
               it('17.8 Should get rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   assert.equal(
-                    (await gv.getPendingReward(
-                      web3.eth.accounts[i]
-                    )).toString(),
+                    (await gv.getPendingReward(accounts[i])).toString(),
                     toWei(10),
-                    web3.eth.accounts[i] + "didn't get reward"
+                    accounts[i] + "didn't get reward"
                   );
                 }
               });
               it('17.9 Should claim rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   await cr.claimAllPendingReward(20, {
-                    from: web3.eth.accounts[i]
+                    from: accounts[i]
                   });
                 }
               });
@@ -253,7 +273,7 @@ contract(
             describe('with Valid Automatic action', function() {
               it('17.10 Should create proposal', async function() {
                 await increaseTime(604800);
-                balance = await web3.eth.getBalance(notMember);
+                IAstatus = await pd.getInvestmentAssetStatus('0x455448');
                 pId = (await gv.getProposalLength()).toNumber();
                 await gv.createProposal(
                   'Proposal2',
@@ -263,13 +283,13 @@ contract(
                 );
               });
               it('17.11 Should whitelist proposal and set Incentives', async function() {
-                await gv.categorizeProposal(pId, 12, toWei(130));
+                await gv.categorizeProposal(pId, 15, toWei(130));
               });
               it('17.12 Should open for voting', async function() {
                 let actionHash = encode(
-                  'transferEther(uint,address)',
-                  '10000000000000000',
-                  notMember
+                  'changeInvestmentAssetStatus(bytes4,bool)',
+                  'ETH',
+                  !IAstatus
                 );
                 await gv.submitProposalWithSolution(
                   pId,
@@ -296,28 +316,28 @@ contract(
                 assert.equal(proposal[2].toNumber(), 3);
               });
               it('17.16 Should execute defined automatic action', async function() {
-                let bal = await web3.eth.getBalance(notMember);
-                assert.isAbove(
-                  bal.toNumber(),
-                  balance.toNumber(),
+                let iaStatusLatest = await pd.getInvestmentAssetStatus(
+                  '0x455448'
+                );
+                assert.notEqual(
+                  iaStatusLatest,
+                  IAstatus,
                   'Action not executed'
                 );
               });
               it('17.17 Should get rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   assert.equal(
-                    (await gv.getPendingReward(
-                      web3.eth.accounts[i]
-                    )).toString(),
+                    (await gv.getPendingReward(accounts[i])).toString(),
                     toWei(10),
-                    web3.eth.accounts[i] + "didn't get reward"
+                    accounts[i] + "didn't get reward"
                   );
                 }
               });
               it('17.18 Should claim rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   await cr.claimAllPendingReward(20, {
-                    from: web3.eth.accounts[i]
+                    from: accounts[i]
                   });
                 }
               });
@@ -325,7 +345,7 @@ contract(
             describe('with in valid Automatic action', function() {
               it('17.19 Should create proposal', async function() {
                 await increaseTime(604800);
-                balance = await web3.eth.getBalance(notMember);
+                IAstatus = await pd.getInvestmentAssetStatus('0x455448');
                 pId = (await gv.getProposalLength()).toNumber();
                 await gv.createProposal(
                   'Proposal2',
@@ -339,9 +359,9 @@ contract(
               });
               it('17.21 Should open for voting', async function() {
                 let actionHash = encode(
-                  'transferEth(uint,address)',
-                  '10000000000000000',
-                  notMember
+                  'changeInvestmentAssetStat(bytes4,bool)', //invalid function declared instead of original one changeInvestmentAssetStatus
+                  'ETH',
+                  false
                 );
                 await gv.submitProposalWithSolution(
                   pId,
@@ -368,28 +388,24 @@ contract(
                 assert.equal(proposal[2].toNumber(), 3);
               });
               it('17.25 Should not execute defined automatic action', async function() {
-                let bal = await web3.eth.getBalance(notMember);
-                assert.equal(
-                  bal.toNumber(),
-                  balance.toNumber(),
-                  'Action executed'
+                let iaStatusLatest = await pd.getInvestmentAssetStatus(
+                  '0x455448'
                 );
+                assert.equal(iaStatusLatest, IAstatus, 'Action executed');
               });
               it('17.26 Should get rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   assert.equal(
-                    (await gv.getPendingReward(
-                      web3.eth.accounts[i]
-                    )).toString(),
+                    (await gv.getPendingReward(accounts[i])).toString(),
                     toWei(10),
-                    web3.eth.accounts[i] + "didn't get reward"
+                    accounts[i] + "didn't get reward"
                   );
                 }
               });
               it('17.27 Should claim rewards', async function() {
                 for (let i = 0; i < 13; i++) {
                   await cr.claimAllPendingReward(20, {
-                    from: web3.eth.accounts[i]
+                    from: accounts[i]
                   });
                 }
               });
@@ -440,16 +456,16 @@ contract(
             it('17.34 Should get rewards', async function() {
               for (let i = 0; i < 13; i++) {
                 assert.equal(
-                  (await gv.getPendingReward(web3.eth.accounts[i])).toString(),
+                  (await gv.getPendingReward(accounts[i])).toString(),
                   toWei(10),
-                  web3.eth.accounts[i] + " didn't get reward"
+                  accounts[i] + " didn't get reward"
                 );
               }
             });
             it('17.35 Should claim rewards', async function() {
               for (let i = 0; i < 13; i++) {
                 await cr.claimAllPendingReward(20, {
-                  from: web3.eth.accounts[i]
+                  from: accounts[i]
                 });
               }
             });
@@ -978,7 +994,7 @@ contract(
             it('17.105 Should claim rewards', async function() {
               for (let i = 0; i < 13; i++) {
                 await cr.claimAllPendingReward(20, {
-                  from: web3.eth.accounts[i]
+                  from: accounts[i]
                 });
               }
             });
@@ -995,8 +1011,8 @@ contract(
                 [2],
                 604800,
                 'QmZQhJunZesYuCJkdGwejSATTR8eynUgV8372cHvnAPMaM',
-                pool1Address,
-                'P1',
+                pd.address,
+                'PD',
                 [0, 0, 0, 1]
               );
               pId = (await gv.getProposalLength()).toNumber();
@@ -1018,7 +1034,7 @@ contract(
             });
             it('17.107 Should create proposal', async function() {
               await increaseTime(604800);
-              balance = await web3.eth.getBalance(notMember);
+              IAstatus = await pd.getInvestmentAssetStatus('0x455448');
               pId = (await gv.getProposalLength()).toNumber();
               await gv.createProposal(
                 'Proposal13',
@@ -1032,9 +1048,9 @@ contract(
             });
             it('17.109 Should open for voting', async function() {
               let actionHash = encode(
-                'transferEther(uint,address)',
-                '10000000000000000',
-                notMember
+                'changeInvestmentAssetStatus(bytes4,bool)',
+                'ETH',
+                !IAstatus
               );
               await gv.submitProposalWithSolution(
                 pId,
@@ -1060,12 +1076,10 @@ contract(
               await gv.closeProposal(pId);
             });
             it('17.112 Should execute defined automatic action', async function() {
-              let bal = await web3.eth.getBalance(notMember);
-              assert.isAbove(
-                bal.toNumber(),
-                balance.toNumber(),
-                'Action not executed'
+              let iaStatusLatest = await pd.getInvestmentAssetStatus(
+                '0x455448'
               );
+              assert.notEqual(iaStatusLatest, IAstatus, 'Action not executed');
             });
           });
         });
@@ -1108,12 +1122,11 @@ contract(
           it('17.119 Should get rewards', async function() {
             for (let i = 0; i < 12; i++) {
               if (
-                web3.toChecksumAddress(web3.eth.accounts[i]) !=
+                web3.toChecksumAddress(accounts[i]) !=
                 web3.toChecksumAddress(mem9)
               ) {
                 assert.isAbove(
-                  (await gv.getPendingReward(web3.eth.accounts[i])).toString() *
-                    1,
+                  (await gv.getPendingReward(accounts[i])).toString() * 1,
                   0,
                   'Incorrect reward'
                 );
@@ -1133,7 +1146,7 @@ contract(
           let actionHash = encode(
             'updateOwnerParameters(bytes8,address)',
             'OWNER',
-            web3.eth.accounts[1]
+            accounts[1]
           );
           await gv.createProposalwithSolution(
             'Proposal14',
@@ -1148,7 +1161,7 @@ contract(
           await gv.submitVote(pId, 0);
         });
         it('17.122 Should not execute defined automatic action', async function() {
-          let isOwner = await nxms.isOwner(web3.eth.accounts[1]);
+          let isOwner = await nxms.isOwner(accounts[1]);
           assert.equal(isOwner, false, 'Action executed');
         });
       });
@@ -1160,7 +1173,7 @@ contract(
           let actionHash = encode(
             'updateOwnerParameters(bytes8,address)',
             'OWNER',
-            web3.eth.accounts[1]
+            accounts[1]
           );
           await gv.createProposalwithSolution(
             'Proposal14',
@@ -1179,7 +1192,7 @@ contract(
           let owner = await nxms.getOwnerParameters(toHex('OWNER'));
           assert.equal(
             web3.toChecksumAddress(owner[1]),
-            web3.toChecksumAddress(web3.eth.accounts[1]),
+            web3.toChecksumAddress(accounts[1]),
             'Action not executed'
           );
         });

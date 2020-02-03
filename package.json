@@ -52,8 +52,8 @@
     "prettier": "^1.14.2",
     "solc": "^0.5.7",
     "solhint": "^1.5.1",
-    "solidity-coverage": "^0.5.11",
-    "truffle": "^5.0.7",
+    "solidity-coverage": "^0.7.1",
+    "truffle": "^5.0.31",
     "truffle-hdwallet-provider": "0.0.5"
   }
 }
